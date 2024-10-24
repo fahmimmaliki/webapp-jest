@@ -1,0 +1,45 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: staging
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextjs-app
+  namespace: staging
+spec:
+  replicas: 3  # Number of replicas
+  selector:
+    matchLabels:
+      app: nextjs-app
+  template:
+    metadata:
+      labels:
+        app: nextjs-app
+    spec:
+      containers:
+      - image: docker.io/fahmimahmud/web-app:latest
+        name: nextjs-app
+        ports:
+        - containerPort: 3000  # Next.js application port
+        env:
+          NODE_ENV: production  # Set environment variables as needed
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nextjs-app
+  namespace: staging
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: nlb  # Use Network Load Balancer
+    service.beta.kubernetes.io/aws-load-balancer-internal: "false"  # External access
+spec:
+  ports:
+  - port: 80
+    targetPort: 3000  # Forward traffic to the container port
+    protocol: TCP
+  type: LoadBalancer
+  selector:
+    app: nextjs-app  # Selects the web app deployment
