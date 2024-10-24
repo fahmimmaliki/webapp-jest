@@ -96,13 +96,13 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
-          kubectl set image deployment/nextjs-deployment nextjs-app=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}
-          kubectl rollout status deployment/nextjs-deployment
+          kubectl set image deployment/nextjs-app nextjs-app=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}
+          kubectl rollout status deployment/nextjs-app
 
       - name: Rollback if deployment fails
         if: failure()
         run: |
-          kubectl rollout undo deployment/nextjs-deployment
+          kubectl rollout undo deployment/nextjs-app
 
           - name: Configure AWS Credentials
           uses: aws-actions/configure-aws-credentials@v2
@@ -117,10 +117,10 @@ jobs:
   
       - name: Deploy to Kubernetes
         run: |
-          kubectl set image deployment/nextjs-deployment nextjs-app=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}
-          kubectl rollout status deployment/nextjs-deployment
+          kubectl set image deployment/nextjs-app nextjs-app=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}
+          kubectl rollout status deployment/nextjs-app
   
       - name: Rollback if deployment fails
         if: failure()
         run: |
-          kubectl rollout undo deployment/nextjs-deployment
+          kubectl rollout undo deployment/nextjs-app
